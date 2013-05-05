@@ -1,0 +1,25 @@
+{
+    "name": "jpiasetz/postmark",
+    "type": "library",
+    "description": "Postmark PHP wrapper for PHP 5.4+",
+    "keywords": ["postmark", "email"],
+    "homepage": "https://github.com/jpiasetz/postmark-php",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "John Piasetzki",
+            "email": "john@piasetzki.name",
+            "homepage": "http://john.piasetzki.name",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "ext-curl": "*"
+    },
+    "autoload": {
+        "psr-0" : {
+            "Postmark" : "src/"
+        }
+    }
+}
