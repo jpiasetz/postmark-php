@@ -1,4 +1,4 @@
-Postmark-PHP - Wrapper for PHP 5.4+
+Postmark-PHP - Wrapper for PHP 5.4+ [![Build Status](https://secure.travis-ci.org/jpiasetz/postmark-php.png)](http://travis-ci.org/jpiasetz/postmark-php)
 ===================================
 
 Postmark is an easy to integrate email service. This wrapper allows 
