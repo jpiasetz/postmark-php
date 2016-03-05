@@ -70,6 +70,16 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('{"From":"\"Last, Foo\" <foo@example.org>"}', json_encode($message));
     }
 
+    /**
+     * @covers Postmark\Message::trackOpens
+     */
+    public function testTrackOpens()
+    {
+        $message = new Message();
+        $message->trackOpens();
+        $this->assertEquals('{"TrackOpens":true}', json_encode($message));
+    }
+
     public function testPostmarkExamples()
     {
         $example1 = '{"From":"sender@example.com","To":"receiver@example.com","Cc":"copied@example.com","Bcc":"blank-copied@example.com","Subject":"Test","Tag":"Invitation","HtmlBody":"<b>Hello</b>","TextBody":"Hello","ReplyTo":"reply@example.com","Headers":[{"Name":"CUSTOM-HEADER","Value":"value"}]}';

@@ -22,6 +22,7 @@ class Message implements JsonSerializable {
     private $htmlBody;
     private $textBody;
     private $replyTo;
+    private $trackOpens;
     private $headers = array();
     private $attachments = array();
 
@@ -80,6 +81,11 @@ class Message implements JsonSerializable {
         $this->from = $this->createAddress($address, $name);
     }
 
+    public function trackOpens()
+    {
+        $this->trackOpens = true;
+    }
+
     private function createAddress($address, $name = null) {
         if (!is_null($name)) {
             if ( 1 === preg_match('/^[A-z0-9 ]*$/', $name)) {
@@ -103,6 +109,7 @@ class Message implements JsonSerializable {
             'ReplyTo'  => $this->replyTo,
             'Headers'  => $this->headers,
             'Attachments' => $this->attachments,
+            'TrackOpens' => $this->trackOpens,
         ];
         return array_filter($json);
     }
