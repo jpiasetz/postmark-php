@@ -22,9 +22,12 @@ class Message implements JsonSerializable {
     private $htmlBody;
     private $textBody;
     private $replyTo;
+    private $headers = [];
     private $trackOpens;
-    private $headers = array();
-    private $attachments = array();
+    private $trackLinks;
+    private $metadata = [];
+    private $attachments = [];
+    private $messageStream;
 
     public function addTo($address, $name = null) {
         $this->addAddress('to', $address, $name);
@@ -36,13 +39,6 @@ class Message implements JsonSerializable {
 
     public function addBcc($address, $name = null) {
         $this->addAddress('bcc', $address, $name);
-    }
-
-    private function addAddress($type, $address, $name = null) {
-        if ( !empty($this->$type) ) {
-            $this->$type .= ', ';
-        }
-        $this->$type .= $this->createAddress($address, $name);
     }
 
     public function setSubject($subject) {
@@ -65,25 +61,58 @@ class Message implements JsonSerializable {
         $this->replyTo = $this->createAddress($address, $name);
     }
 
-    public function addAttachment($name, $content, $contentType) {
-        $this->attachments[] = array(
-            'Name' => $name,
-            'Content' => base64_encode($content),
-            'ContentType' => $contentType
-        );
-    }
-
     public function addHeader($name, $value) {
-        $this->headers[] = array( 'Name' => $name, 'Value' => $value );
+        $this->headers[] = [
+            'Name'  => $name,
+            'Value' => $value,
+        ];
     }
 
-    public function setFrom($address, $name = null) {
-        $this->from = $this->createAddress($address, $name);
-    }
-
-    public function trackOpens()
-    {
+    public function trackOpens() {
         $this->trackOpens = true;
+    }
+
+    public function trackLinks($track='HtmlAndText') {
+        switch (strtolower($track)) {
+            case 'htmlandtext':
+                $this->trackLinks = 'HtmlAndText';
+                break;
+            case 'htmlonly':
+                $this->trackLinks = 'HtmlOnly';
+                break;
+            default:
+                $this->trackLinks = 'None';
+                break;
+        }
+    }
+
+    public function addMetadata($key, $value) {
+        $this->metadata[$name] = $value;
+    }
+
+    public function addAttachment($name, $content, $contentType, $contentID = null) {
+        $attachment = [
+            'Name'        => $name,
+            'Content'     => base64_encode($content),
+            'ContentType' => $contentType,
+        ];
+
+        if ($contentID) {
+            $attachment['ContentID'] = $contentID;
+        }
+
+        $this->attachments[] = &$attachment;
+    }
+
+    public function setMessageStream($stream) {
+        $this->messageStream = $stream;
+    }
+
+    private function addAddress($type, $address, $name = null) {
+        if ( !empty($this->$type) ) {
+            $this->$type .= ', ';
+        }
+        $this->$type .= $this->createAddress($address, $name);
     }
 
     private function createAddress($address, $name = null) {
@@ -98,18 +127,21 @@ class Message implements JsonSerializable {
 
     public function jsonSerialize() {
         $json = [
-            'From'     => $this->from,
-            'To'       => $this->to,
-            'Cc'       => $this->cc,
-            'Bcc'      => $this->bcc,
-            'Subject'  => $this->subject,
-            'Tag'      => $this->tag,
-            'HtmlBody' => $this->htmlBody,
-            'TextBody' => $this->textBody,
-            'ReplyTo'  => $this->replyTo,
-            'Headers'  => $this->headers,
-            'Attachments' => $this->attachments,
-            'TrackOpens' => $this->trackOpens,
+            'From'          => $this->from,
+            'To'            => $this->to,
+            'Cc'            => $this->cc,
+            'Bcc'           => $this->bcc,
+            'Subject'       => $this->subject,
+            'Tag'           => $this->tag,
+            'HtmlBody'      => $this->htmlBody,
+            'TextBody'      => $this->textBody,
+            'ReplyTo'       => $this->replyTo,
+            'Headers'       => $this->headers,
+            'TrackOpens'    => $this->trackOpens,
+            'TrackLinks'    => $this->trackLinks,
+            'Metadata'      => $this->metadata,
+            'Attachments'   => $this->attachments,
+            'MessageStream' => $this->messageStream,
         ];
         return array_filter($json);
     }

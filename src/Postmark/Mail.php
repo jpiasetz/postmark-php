@@ -23,11 +23,11 @@ class Mail {
     }
 
     private function curl($endPoint, $messages) {
-        $headers = array(
+        $headers = [
             'Accept: application/json',
             'Content-Type: application/json',
-            'X-Postmark-Server-Token: '.$this->apiKey
-        );
+            'X-Postmark-Server-Token: '.$this->apiKey,
+        ];
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $endPoint);
@@ -40,7 +40,7 @@ class Mail {
         curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__) . '/Certificate/cacert.pem');
         $return = curl_exec($ch);
 
-        if ( false === $return ) {
+        if (false === $return) {
             throw new Exception(curl_error($ch));
         }
 
@@ -57,12 +57,12 @@ class Mail {
         }
     }
 
-    public function batchSend( array $messages ) {
+    public function batchSend(array $messages) {
         $endPoint = 'https://api.postmarkapp.com/email/batch';
         return $this->curl($endPoint, $messages);
     }
 
-    public function send( Message $message ) {
+    public function send(Message $message) {
         $endPoint = 'https://api.postmarkapp.com/email';
         return $this->curl($endPoint, $message);
     }
