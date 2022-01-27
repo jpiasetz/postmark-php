@@ -29,6 +29,10 @@ class Message implements JsonSerializable {
     private $attachments = [];
     private $messageStream;
 
+    public function setFrom($address, $name = null) {
+        $this->from = $this->createAddress($address, $name);
+    }
+
     public function addTo($address, $name = null) {
         $this->addAddress('to', $address, $name);
     }
