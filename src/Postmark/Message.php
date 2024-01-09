@@ -129,7 +129,7 @@ class Message implements JsonSerializable {
         return $address;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize() : array {
         $json = [
             'From'          => $this->from,
             'To'            => $this->to,
